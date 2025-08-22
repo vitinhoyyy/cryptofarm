@@ -1,0 +1,37 @@
+name: PHP CryptoAds Worker
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'  # Executa a cada 1 minutos
+  workflow_dispatch:        # Permite execução manual
+
+jobs:
+  run-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2     # Limite de tempo de execução
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Configurar PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: curl, json, mbstring
+        tools: composer
+
+    - name: Executar Worker PHP
+      run: |
+        php worker.php
+      env:
+        COOKIE: ${{ secrets.COOKIE }}
+        USER_AGENT: ${{ secrets.USER_AGENT }}
+        
+    - name: Upload logs (opcional)
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: worker-logs
+        path: | # Capture a saída do PHP
+          $(echo "[$(date)] Logs da execução")

@@ -1,0 +1,9 @@
+{
+    "name": "cryptoads-worker/github-actions",
+    "description": "Worker para Cryptoads via GitHub Actions",
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    }
+}
