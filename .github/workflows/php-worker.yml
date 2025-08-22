@@ -1,0 +1,26 @@
+name: PHP CryptoAds Worker
+on: 
+  schedule:
+    - cron: '*/10 * * * *'  # Runs every 10 minutes
+  workflow_dispatch:         # Allow manual runs
+
+jobs:
+  run-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer
+
+    - name: Run CryptoAds Worker
+      run: php worker.php
+      env:
+        COOKIE: ${{ secrets.COOKIE }}
+        USER_AGENT: ${{ secrets.USER_AGENT }}
